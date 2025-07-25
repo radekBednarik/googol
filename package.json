@@ -25,5 +25,8 @@
     "printWidth": 80,
     "singleQuote": false,
     "trailingComma": "all"
+  },
+  "dependencies": {
+    "prexit": "^2.3.0"
   }
 }

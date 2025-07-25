@@ -1,3 +1,5 @@
+import prexit from 'prexit'
+
 class Gear {
   private readonly inner: number;
   private readonly outer: number;
@@ -62,19 +64,19 @@ function createGoogol() {
 }
 
 async function main() {
+  
   const googol = createGoogol();
-  let index = 0
+
+  prexit(() => {
+    googol.forEach((gear) => {
+     gear.state()
+   })     
+  })
 
   while (true) {
-    console.log("First disk rotation count: ", index + 1)
     googol.forEach((gear) => {
       gear.rotate();
-      gear.state();
     });
-
-    console.log("\n----")
-
-    index++
 
     await new Promise((res) => setTimeout(res, 100));
   }
