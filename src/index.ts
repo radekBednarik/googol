@@ -38,9 +38,10 @@ class Gear {
   }
 
   state() {
-    console.log("Gear no.: ", this.gearNumber);
-    console.log("  -- full rotation count: ", this.rotationFullCount);
-    console.log("  -- step rotation count: ", this.rotationStepCount);
+    return {
+      rotationFullCount: this.rotationFullCount,
+      rotationStepCount: this.rotationStepCount,
+    };
   }
 }
 
@@ -61,6 +62,11 @@ function createGoogol() {
   return googol;
 }
 
+function printGoogol(googol: Gear[]) {
+  const data = googol.map((gear) => gear.state());
+  console.table(data);
+}
+
 function main() {
   const googol = createGoogol();
   // eslint-disable-next-line
@@ -69,9 +75,8 @@ function main() {
   prexit(() => {
     clearInterval(interval);
 
-    googol.forEach((gear) => {
-      gear.state();
-    });
+    console.log("\n");
+    printGoogol(googol);
   });
 
   interval = setInterval(() => {
