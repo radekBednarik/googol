@@ -62,7 +62,28 @@ function createGoogol() {
   return googol;
 }
 
-function printGoogol(googol: Gear[]) {
+function printCurrentState(googol: Gear[]) {
+  console.clear();
+
+  const data = [];
+
+  for (const gear of googol) {
+    if (gear.rotationFullCount > 0) {
+      data.push({
+        rotationFullCount: gear.rotationFullCount,
+        rotationStepCount: gear.rotationStepCount,
+      });
+    }
+  }
+
+  if (data.length === 0) {
+    return console.log("No gear has fully rotated yet.");
+  }
+
+  return console.table(data);
+}
+
+function printFinalState(googol: Gear[]) {
   const data = googol.map((gear) => gear.state());
   console.table(data);
 }
@@ -78,7 +99,7 @@ function main() {
     console.log("\n");
     console.timeEnd("googol");
 
-    printGoogol(googol);
+    printFinalState(googol);
   });
 
   console.time("googol");
@@ -87,6 +108,8 @@ function main() {
     googol.forEach((gear) => {
       gear.rotate();
     });
+
+    printCurrentState(googol);
   }, 1000);
 }
 
