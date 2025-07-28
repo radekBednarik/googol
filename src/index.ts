@@ -1,4 +1,5 @@
 import prexit from "prexit";
+import fs from "node:fs/promises";
 
 class Gear {
   private readonly inner: number;
@@ -49,7 +50,9 @@ class Gear {
   }
 }
 
-function createGoogol() {
+function createGoogol(
+  snapshot: { rotationFullCount: number; rotationStepCount: number }[] = [],
+) {
   const gearsCount = 100;
 
   const googol: Gear[] = [];
@@ -61,6 +64,13 @@ function createGoogol() {
     }
 
     googol.push(new Gear(googol[i - 1], i + 1));
+  }
+
+  if (snapshot.length > 0) {
+    snapshot.forEach((gear, i) => {
+      googol[i].rotationFullCount = gear.rotationFullCount;
+      googol[i].rotationStepCount = gear.rotationStepCount;
+    });
   }
 
   return googol;
@@ -87,18 +97,41 @@ function printCurrentState(googol: Gear[]) {
   return console.table(data);
 }
 
+async function saveSnapshot(googol: Gear[]) {
+  const data = googol.map((gear) => gear.state());
+  const filePath = "./snapshot.json";
+
+  await fs.writeFile(filePath, JSON.stringify(data, null, 2));
+}
+
+async function loadSnapshot() {
+  try {
+    const filePath = "./snapshot.json";
+    const data = await fs.readFile(filePath, "utf-8");
+    return JSON.parse(data) as {
+      rotationFullCount: number;
+      rotationStepCount: number;
+    }[];
+    // eslint-disable-next-line
+  } catch (_) {
+    return [];
+  }
+}
+
 function printFinalState(googol: Gear[]) {
   const data = googol.map((gear) => gear.state());
   console.table(data);
 }
 
-function main() {
-  const googol = createGoogol();
+async function main() {
+  const snapshot = await loadSnapshot();
+  const googol = createGoogol(snapshot);
   // eslint-disable-next-line
   let interval: NodeJS.Timeout;
 
-  prexit(() => {
+  prexit(async () => {
     clearInterval(interval);
+    await saveSnapshot(googol);
 
     console.clear();
     console.log("\n");
@@ -118,4 +151,4 @@ function main() {
   }, 10);
 }
 
-main();
+await main();
