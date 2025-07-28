@@ -76,14 +76,18 @@ function main() {
     clearInterval(interval);
 
     console.log("\n");
+    console.timeEnd("googol");
+
     printGoogol(googol);
   });
+
+  console.time("googol");
 
   interval = setInterval(() => {
     googol.forEach((gear) => {
       gear.rotate();
     });
-  }, 10);
+  }, 1000);
 }
 
 main();
