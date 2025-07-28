@@ -1,9 +1,8 @@
-import prexit from 'prexit'
+import prexit from "prexit";
 
 class Gear {
   private readonly inner: number;
   private readonly outer: number;
-  private readonly ratio: number;
 
   public gearNumber: number;
   public rotationFullCount: number;
@@ -14,7 +13,6 @@ class Gear {
   constructor(previous: Gear | null, gearNumber: number) {
     this.inner = 10;
     this.outer = 100;
-    this.ratio = this.outer / this.inner;
 
     this.gearNumber = gearNumber;
     this.rotatedFully = false;
@@ -41,8 +39,8 @@ class Gear {
 
   state() {
     console.log("Gear no.: ", this.gearNumber);
-    console.log("  -- full rotation count: ", this.rotationFullCount)
-    console.log("  -- step rotation count: ", this.rotationStepCount)
+    console.log("  -- full rotation count: ", this.rotationFullCount);
+    console.log("  -- step rotation count: ", this.rotationStepCount);
   }
 }
 
@@ -63,23 +61,24 @@ function createGoogol() {
   return googol;
 }
 
-async function main() {
-  
+function main() {
   const googol = createGoogol();
+  // eslint-disable-next-line
+  let interval: NodeJS.Timeout;
 
   prexit(() => {
-    googol.forEach((gear) => {
-     gear.state()
-   })     
-  })
+    clearInterval(interval);
 
-  while (true) {
+    googol.forEach((gear) => {
+      gear.state();
+    });
+  });
+
+  interval = setInterval(() => {
     googol.forEach((gear) => {
       gear.rotate();
     });
-
-    await new Promise((res) => setTimeout(res, 100));
-  }
+  }, 10);
 }
 
-await main();
+main();
