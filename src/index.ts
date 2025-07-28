@@ -22,10 +22,14 @@ class Gear {
   }
 
   rotate() {
-    // if either this is first gear OR the previous one fully rotated
-    // rotate one step
-    if (this.previous === null || this.previous.rotatedFully) {
+    if (this.previous === null) {
       this.rotationStepCount += 1;
+      this.rotatedFully = false;
+    }
+
+    if (this.previous && this.previous.rotatedFully) {
+      this.rotationStepCount += 1;
+      this.previous.rotatedFully = false;
       this.rotatedFully = false;
     }
 
@@ -96,6 +100,7 @@ function main() {
   prexit(() => {
     clearInterval(interval);
 
+    console.clear();
     console.log("\n");
     console.timeEnd("googol");
 
@@ -110,7 +115,7 @@ function main() {
     });
 
     printCurrentState(googol);
-  }, 1000);
+  }, 10);
 }
 
 main();
